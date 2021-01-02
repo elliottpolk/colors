@@ -1,4 +1,4 @@
-module github.com/elliottpolk/colors
+module github.com/elliottpolk/hc
 
 go 1.15
 
