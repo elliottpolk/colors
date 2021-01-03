@@ -136,12 +136,12 @@ func main() {
 	)
 
 	app := cli.App{
-		Name:      "hc",
+		Name:      "colr",
 		Copyright: "Copyright © 2021",
 		Version:   fmt.Sprintf("%s | compiled %s | commit %s", version, time.Unix(ct, -1).Format(time.RFC3339), githash),
 		Compiled:  time.Unix(ct, -1),
 		Usage:     "outputs the given color as a swatch",
-		UsageText: "hc [arguments...] [hex_value]",
+		UsageText: "colr [arguments...] [hex_value]",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:        "format",

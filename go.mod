@@ -1,4 +1,4 @@
-module github.com/elliottpolk/hc
+module github.com/elliottpolk/colr
 
 go 1.15
 

@@ -1,5 +1,5 @@
-BIN=hc
-PKG=github.com/elliottpolk/hc
+BIN=colr
+PKG=github.com/elliottpolk/$(BIN)
 CLI_VERSION=`cat .version`
 COMPILED=`date +%s`
 GIT_HASH=`git rev-parse --short HEAD`
@@ -25,23 +25,24 @@ unit-test: ; $(info $(M) running unit tests...)                     @ ## run the
 	@go get -v -u
 	@go test -cover ./...
 
-.PHONY: build
-build: build-dir; $(info $(M) building ...)                         @ ## build the binary
+.PHONY: update
+update: clean; $(info $(M) updating deps...)                        @ ## update the deps
 	@GOOS=$(GOOS) go get -v -u
-	@GOOS=$(GOOS) go build \
-		-ldflags "-X main.version=$(CLI_VERSION) -X main.compiled=$(COMPILED) -X main.githash=$(GIT_HASH)" \
-		-o ./build/bin/$(BIN) ./main.go
 
 .PHONEY: build-dir
 build-dir: ;
-	@[ ! -d "${BUILD_DIR}" ] && mkdir -vp "${BUILD_DIR}" || true
+	@[ ! -d "${BUILD_DIR}" ] && mkdir -vp "${BUILD_DIR}" || true    @ ## generate the build dir
+
+.PHONY: build
+build: build-dir; $(info $(M) building ...)                         @ ## build the binary
+	@GOOS=$(GOOS) go build \
+		-ldflags "-X main.version=$(CLI_VERSION) -X main.compiled=$(COMPILED) -X main.githash=$(GIT_HASH)" \
+		-o $(BUILD_DIR)/$(BIN) ./main.go
 
 .PHONEY: install
-install: ; $(info $(M) installing locally ...) 						@ ## install binary locally
-	@go get -v -u
-	@go build \
-		-ldflags "-X main.version=$(CLI_VERSION) -X main.compiled=$(COMPILED) -X main.githash=$(GIT_HASH)" \
-		-o $(GOPATH)/bin/$(BIN) ./main.go
+install: clean build; $(info $(M) installing locally ...) 						@ ## install binary locally
+	@cp -v $(BUILD_DIR)/$(BIN) $(GOPATH)/bin/$(BIN)
+
 .PHONY: help
 help:
 	@grep -E '^[ a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
